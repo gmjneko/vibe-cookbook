@@ -46,7 +46,7 @@ project-guide/
 - 如果 `_meta.md` 不存在，先完成阶段一的调查并写出 `_meta.md` 和 `01-overview.md`，告诉用户你先补了全景文档，再继续用户要求的阶段。
 - 如果 `_meta.md` 记录的 commit 与当前 `git rev-parse HEAD` 不一致，在回复开头提醒用户文档可能过期，建议运行 `update`，然后继续当前任务。
 
-`.project-guide/` 是生成产物，第一次创建时提醒用户可以自行把它加进 `.gitignore`，但不要替用户修改 `.gitignore`。
+`project-guide/` 是生成产物，第一次创建时提醒用户可以自行把它加进 `.gitignore`，但不要替用户修改 `.gitignore`。
 
 ## 回复用户的方式
 
@@ -58,7 +58,31 @@ project-guide/
 
 ## 贯穿所有阶段的原则
 
-**准确性高于完整性。** 每个关于代码的结论都必须来自你实际读过的代码。先读后写：不要根据文件名、目录名或常见惯例猜测实现。正文中的关键结论附上源码位置或者`函数名`，最好能把对应的关键代码给出来，其中那一段代码中不关键的部分可以用`省略号+注释`代替那几行。
+**准确性高于完整性。** 每个关于代码的结论都必须来自你实际读过的代码。先读后写：不要根据文件名、目录名或常见惯例猜测实现。
+
+**关键代码直接贴出来，不要只给行号。** 无论是写进文档还是回复用户，讲到关键实现时，都要把对应的代码摘录出来，而不是只写一个 `src/router/match.ts:42` 让读者自己去翻。代码块开头写语言标记，再用 `title` 标出文件名，如 ` ```ts title="match.ts" `。代码不长（二十行以内）就整段贴出；只有较长时，才把与讲解无关的部分用"注释 + `...`"省略，注释说明被省略的部分做了什么：
+
+```ts title="match.ts"
+export function matchRoute(tree: Node, method: string, path: string) {
+  // 开发模式下检查 path 是否以 / 开头，不是就打印警告；不影响匹配结果
+  ...
+
+  const segments = splitPath(path);
+  const params: Record<string, string> = {};
+  const node = tree.search(segments, params);
+  if (!node) return null;
+
+  const handler = node.handlers[method] ?? node.handlers['ALL'];
+  if (!handler) return { status: 405, allow: Object.keys(node.handlers) };
+
+  // 把本次匹配耗时写入 debug 日志
+  ...
+
+  return { handler, params };
+}
+```
+
+省略不能影响读者对逻辑的理解：分支、提前返回、异常处理、对后续变量的赋值这类决定执行过程的代码，必须保留。完整的摘录规则见 `references/style.md` 中的"代码摘录"一节。
 
 **区分确认的事实和推断。** 从代码里能直接确认的内容正常陈述。推断出来的内容（尤其是设计动机、历史原因）必须标明依据：引用了 commit message、注释、issue、文档，就写出来源；找不到依据、只是你的分析，就写成"从 XX 来看，这里可能是为了……（推测）"。宁可承认不知道，也不要编一个听起来合理的故事。
 
