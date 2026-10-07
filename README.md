@@ -10,14 +10,14 @@
 
 下表列出了本仓库中收集/借鉴的优秀开源 Skill 及其原始出处：
 
-| Skill Name | 说明 / 适用场景 | 原仓库链接 |
+| Skill Name | 说明 / 适用场景 | 原仓库 |
 | --- | --- | --- |
 | grill-me | 提问与需求挖掘工具 | mattpocock/skills |
 | grilling | 深入追问与逻辑梳理 | mattpocock/skills |
 
 ## 使用指南
 
-> 根据你支持的工具（如 Cursor / Windsurf / Claude Desktop 等）补充步骤。
+> 根据你支持的工具（如 Codex / Claude Code / Cursor 等）补充步骤。
 
 1. 克隆本项目：
 
@@ -25,4 +25,4 @@
    git clone https://github.com/gmjneko/vibe-cookbook.git
    ```
 
-2. 将对应的 `rules` 或 `skills` 复制到你的项目根目录或全局配置路径（如 `.agents/rules`）。
+2. 将对应的 `rules` 或 `skills` 复制到你的项目根目录或全局配置路径（如 `.agents/skills`）。
